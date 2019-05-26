@@ -31,6 +31,9 @@ func main() {
 	if err := g.SetKeybinding("", gocui.KeyCtrlC, gocui.ModNone, quit); err != nil {
 		log.Panicln(err)
 	}
+	if err := g.SetKeybinding("", 'q', gocui.ModNone, quit); err != nil {
+		log.Panicln(err)
+	}
 
 	go counter(g)
 
@@ -62,6 +65,9 @@ func counterString() string {
 	} else {
 		h = int(math.Floor(time.Until(t).Hours()))
 		m = int(math.Ceil((time.Until(t).Hours() - math.Floor(time.Until(t).Hours())) * 60))
+	}
+	if m == 60 {
+		m = 0
 	}
 
 	return fmt.Sprintf("%d:%02d", h, m)
