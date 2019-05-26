@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/jroimartin/gocui"
-	"github.com/pkg/errors"
 )
 
 const (
@@ -236,8 +235,8 @@ func init() {
 		os.Exit(1)
 	}
 	if m < 0 || m > 59 {
-		logger.Println("t string should be in format: HH:MM(am|pm) (eg. \"5:00pm\")")
-		logger.Printf("%+v", errors.WithStack(err))
+		fmt.Println("t string should be in format: HH:MM(am|pm) (eg. \"5:00pm\")")
+		flag.PrintDefaults()
 		os.Exit(1)
 	}
 
