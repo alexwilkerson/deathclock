@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"math"
+	"os"
 	"time"
 
 	"github.com/jroimartin/gocui"
@@ -15,6 +16,7 @@ var (
 	hour          int
 	seconds       bool
 	done          = make(chan struct{})
+	logger        *log.Logger
 )
 
 func layout(g *gocui.Gui) error {
@@ -96,6 +98,8 @@ func printCounter(g *gocui.Gui, toPrint string) error {
 func init() {
 	flag.BoolVar(&seconds, "s", false, "display countdown timer with seconds")
 	flag.Parse()
+
+	logger = log.New(os.Stdout, "deathclock:", log.LstdFlags)
 }
 
 func main() {
@@ -109,7 +113,7 @@ func main() {
 
 	g, err := gocui.NewGui(gocui.OutputNormal)
 	if err != nil {
-		log.Panicln(err)
+		logger.Panicln(err)
 	}
 	defer g.Close()
 
@@ -118,15 +122,15 @@ func main() {
 	g.SetManagerFunc(layout)
 
 	if err := g.SetKeybinding("", gocui.KeyCtrlC, gocui.ModNone, quit); err != nil {
-		log.Panicln(err)
+		logger.Panicln(err)
 	}
 	if err := g.SetKeybinding("", 'q', gocui.ModNone, quit); err != nil {
-		log.Panicln(err)
+		logger.Panicln(err)
 	}
 
 	go counter(g)
 
 	if err := g.MainLoop(); err != nil && err != gocui.ErrQuit {
-		log.Panicln(err)
+		logger.Panicln(err)
 	}
 }
