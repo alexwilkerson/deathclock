@@ -102,38 +102,42 @@ func printCounter(g *gocui.Gui, toPrint string) error {
 
 func init() {
 	var endTime string
-	flag.StringVar(&color, "c", "red", "color of the countdown timer")
+	flag.StringVar(&color, "c", "red", "color of the countdown timer (\"black\", \"red\", \"green\", \"yellow\", \"blue\", \"magenta\", \"cyan\", \"white\")")
 	flag.BoolVar(&seconds, "s", false, "display countdown timer with seconds")
 	flag.StringVar(&endTime, "t", "5:00pm", "time to count down to in format: HH:MM(am|pm) (eg. \"5:00pm\")")
 	flag.Parse()
 
-	logger = log.New(os.Stdout, "deathclock:", log.LstdFlags)
+	logger = log.New(os.Stdout, "deathclock: ", log.LstdFlags)
 
 	if len(endTime) < 6 || len(endTime) > 7 {
-		logger.Println("t string should be in format: HH:MM(am|pm) (eg. \"5:00pm\")")
+		fmt.Println("t string should be in format: HH:MM(am|pm) (eg. \"5:00pm\")")
+		flag.PrintDefaults()
 		os.Exit(1)
 	}
 	period := endTime[len(endTime)-2:]
 	period = strings.ToLower(period)
 	if period != "pm" && period != "am" {
-		logger.Println("t string should be in format: HH:MM(am|pm) (eg. \"5:00pm\")")
+		fmt.Println("t string should be in format: HH:MM(am|pm) (eg. \"5:00pm\")")
+		flag.PrintDefaults()
 		os.Exit(1)
 	}
 	t := strings.Split(endTime[:len(endTime)-2], ":")
 	if len(t) != 2 {
-		logger.Println("t string should be in format: HH:MM(am|pm) (eg. \"5:00pm\")")
+		fmt.Println("t string should be in format: HH:MM(am|pm) (eg. \"5:00pm\")")
+		flag.PrintDefaults()
 		os.Exit(1)
 	}
 	hs := t[0]
 	ms := t[1]
 	h, err := strconv.Atoi(hs)
 	if err != nil {
-		logger.Println("t string should be in format: HH:MM(am|pm) (eg. \"5:00pm\")")
-		logger.Printf("%+v", errors.WithStack(err))
+		fmt.Println("t string should be in format: HH:MM(am|pm) (eg. \"5:00pm\")")
+		flag.PrintDefaults()
 		os.Exit(1)
 	}
 	if h < 1 || h > 12 {
-		logger.Println("t string should be in format: HH:MM(am|pm) (eg. \"5:00pm\")")
+		fmt.Println("t string should be in format: HH:MM(am|pm) (eg. \"5:00pm\")")
+		flag.PrintDefaults()
 		os.Exit(1)
 	}
 	if period == "pm" {
@@ -141,12 +145,13 @@ func init() {
 	}
 	m, err := strconv.Atoi(ms)
 	if err != nil {
-		logger.Println("t string should be in format: HH:MM(am|pm) (eg. \"5:00pm\")")
-		logger.Printf("%+v", errors.WithStack(err))
+		fmt.Println("t string should be in format: HH:MM(am|pm) (eg. \"5:00pm\")")
+		flag.PrintDefaults()
 		os.Exit(1)
 	}
 	if m < 0 || m > 59 {
 		logger.Println("t string should be in format: HH:MM(am|pm) (eg. \"5:00pm\")")
+		logger.Printf("%+v", errors.WithStack(err))
 		os.Exit(1)
 	}
 
@@ -157,16 +162,11 @@ func init() {
 		parsedTime = parsedTime.AddDate(0, 0, 1)
 	}
 
-	logger.Println(time.Until(parsedTime))
-
 	year = parsedTime.Year()
 	month = parsedTime.Month()
 	day = parsedTime.Day()
 	hour = parsedTime.Hour()
 	minute = parsedTime.Minute()
-
-	logger.Println(now.Year(), now.Month(), now.Day(), h, m)
-	logger.Println(year, month, day, hour, minute)
 }
 
 func main() {
