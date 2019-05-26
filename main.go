@@ -17,6 +17,7 @@ var (
 	seconds       bool
 	done          = make(chan struct{})
 	logger        *log.Logger
+	color         string
 )
 
 func layout(g *gocui.Gui) error {
@@ -96,6 +97,7 @@ func printCounter(g *gocui.Gui, toPrint string) error {
 }
 
 func init() {
+	flag.StringVar(&color, "c", "red", "color of the countdown timer")
 	flag.BoolVar(&seconds, "s", false, "display countdown timer with seconds")
 	flag.Parse()
 
@@ -117,7 +119,26 @@ func main() {
 	}
 	defer g.Close()
 
-	g.FgColor = gocui.ColorRed
+	switch color {
+	case "black":
+		g.FgColor = gocui.ColorBlack
+	case "red":
+		g.FgColor = gocui.ColorRed
+	case "green":
+		g.FgColor = gocui.ColorGreen
+	case "yellow":
+		g.FgColor = gocui.ColorYellow
+	case "blue":
+		g.FgColor = gocui.ColorBlue
+	case "magenta":
+		g.FgColor = gocui.ColorMagenta
+	case "cyan":
+		g.FgColor = gocui.ColorCyan
+	case "white":
+		g.FgColor = gocui.ColorWhite
+	default:
+		g.FgColor = gocui.ColorRed
+	}
 
 	g.SetManagerFunc(layout)
 
