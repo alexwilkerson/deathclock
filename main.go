@@ -225,7 +225,11 @@ func init() {
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
-	if period == "pm" {
+	if h == 12 {
+		if period == "am" {
+			h = 0
+		}
+	} else if period == "pm" {
 		h += 12
 	}
 	m, err := strconv.Atoi(ms)
