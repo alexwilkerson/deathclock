@@ -300,6 +300,9 @@ func main() {
 	if err := g.SetKeybinding("", 'q', gocui.ModNone, quit); err != nil {
 		logger.Panicln(err)
 	}
+	if err := g.SetKeybinding("", gocui.KeyEsc, gocui.ModNone, quit); err != nil {
+		logger.Panicln(err)
+	}
 
 	go counter(g)
 
